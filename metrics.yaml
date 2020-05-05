@@ -1,0 +1,37 @@
+# Copyright 2020 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+resources:
+- type: logging.v2.metric
+  name: backup-cloud-scheduler-errors
+  properties:
+    metric: backup-cloud-scheduler-errors
+    description: The failures of scheduled jobs
+    filter: resource.type="cloud_scheduler_job" severity>=WARNING jsonPayload.jobName:"jobs/spanner-backup"
+- type: logging.v2.metric
+  name: backup-cloud-function-errors
+  properties:
+    metric: backup-cloud-function-errors
+    description: The failures of starting a backup operation
+    filter: resource.type="cloud_function" resource.labels.function_name="SpannerCreateBackup" "Function error"
+- type: logging.v2.metric
+  name: backup-cloud-spanner-errors
+  properties:
+    metric: backup-cloud-spanner-errors
+    description: The failures of backup operations
+    filter: >
+      resource.type="spanner_instance"
+      severity >= ERROR
+      protoPayload.methodName="google.spanner.admin.database.v1.DatabaseAdmin.CreateBackup"
+      protoPayload.resourceName:"backups/schedule-"
