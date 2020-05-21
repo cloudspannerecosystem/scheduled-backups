@@ -1,4 +1,4 @@
-# Scheduled Backups System (SBS)
+# Scheduled Backups
 
 This example shows how to use Cloud Scheduler and Cloud Function to configure
 a schedule for creating Cloud Spanner backups.
@@ -81,7 +81,7 @@ that define when we should send an alert notification.
 Cloud Monitoring API is still under alpha, so we would recommend using GCP
 console to create the alerting policies.
 
-The easist way is to go to Logs-based Metrics under Cloud Logging and for each
+The easiest way is to go to Logs-based Metrics under Cloud Logging and for each
 user-defined metric, there is an option `Create alert from metric`. From there,
 we can choose `Aggregrator`, such as `sum` or `mean`, for the target metric, and
 define what the condition of triggering an alert is, e.g., any time series
