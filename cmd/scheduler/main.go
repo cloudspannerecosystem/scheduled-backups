@@ -24,7 +24,7 @@ import (
 	"os"
 
 	scheduler "cloud.google.com/go/scheduler/apiv1"
-	"github.com/cloudspannerecosystem/scheduled-backups/backupfunction"
+	backupfunction "github.com/cloudspannerecosystem/scheduled-backups"
 	schedulerpb "google.golang.org/genproto/googleapis/cloud/scheduler/v1"
 	"google.golang.org/genproto/protobuf/field_mask"
 	"google.golang.org/grpc/codes"
@@ -120,7 +120,7 @@ func errCode(err error) codes.Code {
 }
 
 func updateJob(ctx context.Context, client *scheduler.CloudSchedulerClient, jobName, locPath, dbPath, topicPath string, db Database) error {
-	meta := backupfunction.Meta{Database: dbPath, Expire: db.Expire}
+	meta := backupfunction.BackupParameters{Database: dbPath, Expire: db.Expire}
 	data, err := json.Marshal(meta)
 	if err != nil {
 		log.Fatalf("Failed to marshal data: %v", err)
@@ -151,7 +151,7 @@ func updateJob(ctx context.Context, client *scheduler.CloudSchedulerClient, jobN
 }
 
 func createJob(ctx context.Context, client *scheduler.CloudSchedulerClient, jobName, locPath, dbPath, topicPath string, db Database) {
-	meta := backupfunction.Meta{Database: dbPath, Expire: db.Expire}
+	meta := backupfunction.BackupParameters{Database: dbPath, Expire: db.Expire}
 	data, err := json.Marshal(meta)
 	if err != nil {
 		log.Fatalf("Failed to marshal data: %v", err)

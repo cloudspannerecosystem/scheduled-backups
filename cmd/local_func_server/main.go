@@ -19,7 +19,7 @@ import (
 	"os"
 
 	"github.com/GoogleCloudPlatform/functions-framework-go/funcframework"
-	"github.com/cloudspannerecosystem/scheduled-backups/backupfunction"
+	backupfunction "github.com/cloudspannerecosystem/scheduled-backups"
 )
 
 func main() {
