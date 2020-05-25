@@ -18,7 +18,9 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"log"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 	"testing"
@@ -44,7 +46,18 @@ var (
 
 	databaseAdmin *database.DatabaseAdminClient
 	instanceAdmin *instance.InstanceAdminClient
+
+	validInstancePattern = regexp.MustCompile("^projects/(?P<project>[^/]+)/instances/(?P<instance>[^/]+)$")
 )
+
+func parseInstanceName(inst string) (project, instance string, err error) {
+	matches := validInstancePattern.FindStringSubmatch(inst)
+	if len(matches) == 0 {
+		return "", "", fmt.Errorf("Failed to parse instance name from %q according to pattern %q",
+			inst, validInstancePattern.String())
+	}
+	return matches[1], matches[2], nil
+}
 
 func initIntegrationTests(t *testing.T) (cleanup func()) {
 	ctx := context.Background()
@@ -226,7 +239,12 @@ func cleanupInstances(t *testing.T) {
 		if err != nil {
 			panic(err)
 		}
-		if isOlder(t, inst.Name, expireAge) {
+		_, instID, err := parseInstanceName(inst.Name)
+		if err != nil {
+			log.Printf("Error: %v\n", err)
+			continue
+		}
+		if isOlder(t, instID, expireAge) {
 			t.Logf("Deleting instance %s", inst.Name)
 
 			// First delete any lingering backups that might have been left on
