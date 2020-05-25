@@ -34,7 +34,7 @@ gcloud functions deploy SpannerCreateBackup --trigger-topic cloud-spanner-schedu
 Call the `SpannerCreateBackup` function from the command-line:
 
 ```bash
-DATA=$(printf '{"database":"projects/[PROJECT_ID]/instances/[INSTANCE_ID]/databases/[DATABASE_ID]", "expire": "6h"}'|base64) && gcloud functions call SpannerCreateBackup --data '{"data":"'$DATA'"}'
+DATA=$(printf '{"database":"projects/[PROJECT_ID]/instances/[INSTANCE_ID]/databases/[DATABASE_ID]", "expire": "6h"}'|base64|tr -d '\n') && gcloud functions call SpannerCreateBackup --data '{"data":"'$DATA'"}'
 ```
 
 ## Deploy scheduled jobs to Cloud Scheduler
@@ -67,7 +67,7 @@ via GCP Console, API, gcloud, etc. Here, for convenience, we use
 to create custom metrics.
 
 ```bash
-gcloud deployment-manager deployments create schedule-backup-metrics-deployment --config resources.yaml
+gcloud deployment-manager deployments create schedule-backup-metrics-deployment --config metrics.yaml
 ```
 
 After this, we should see three user-defined metrics under `Logs-based Metrics`
