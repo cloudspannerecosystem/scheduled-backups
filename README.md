@@ -14,7 +14,7 @@ go run cmd/local_func_server/main.go
 Start another terminal for calling the function:
 
 ```bash
-DATA=$(printf '{"database":"projects/[PROJECT_ID]/instances/[INSTANCE_ID]/databases/[DATABASE_ID]", "expire": "6h"}'|base64) && curl --data '{"data":"'$DATA'"}' localhost:8080
+DATA=$(printf '{"database":"projects/[PROJECT_ID]/instances/[INSTANCE_ID]/databases/[DATABASE_ID]", "expire": "6h"}'|base64|tr -d '\n') && curl --data '{"data":"'$DATA'"}' localhost:8080
 ```
 
 ## Run SpannerCreateBackup in Cloud
