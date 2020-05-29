@@ -35,3 +35,77 @@ resources:
       severity >= ERROR
       protoPayload.methodName="google.spanner.admin.database.v1.DatabaseAdmin.CreateBackup"
       protoPayload.resourceName:"backups/schedule-"
+- type: gcp-types/monitoring-v3:projects.notificationChannels
+  name: backup-notification-channel
+  properties:
+    displayName: Email notification channel
+    enabled: true
+    labels:
+      email_address: nobody+gcptypes@google.com
+    type: email
+- name: backup-cloud-function-alert
+  type: gcp-types/monitoring-v3:projects.alertPolicies
+  properties:
+    combiner: OR
+    conditions:
+    - conditionThreshold:
+        aggregations:
+        - alignmentPeriod: 60s
+          crossSeriesReducer: REDUCE_SUM
+          perSeriesAligner: ALIGN_MEAN
+        comparison: COMPARISON_GT
+        duration: 60s
+        filter: resource.type="cloud_function"
+          AND metric.type="logging.googleapis.com/user/backup-cloud-function-errors"
+        thresholdValue: 0
+        trigger:
+          count: 1
+      displayName: logging/user/backup-cloud-function-errors [SUM]
+    displayName: backup-cloud-function-alert
+    notificationChannels:
+      - $(ref.backup-notification-channel.name)
+    enabled: true
+- name: backup-cloud-scheduler-alert
+  type: gcp-types/monitoring-v3:projects.alertPolicies
+  properties:
+    combiner: OR
+    conditions:
+    - conditionThreshold:
+        aggregations:
+        - alignmentPeriod: 60s
+          crossSeriesReducer: REDUCE_SUM
+          perSeriesAligner: ALIGN_MEAN
+        comparison: COMPARISON_GT
+        duration: 60s
+        filter: resource.type="cloud_scheduler_job"
+          AND metric.type="logging.googleapis.com/user/backup-cloud-scheduler-errors"
+        thresholdValue: 0
+        trigger:
+          count: 1
+      displayName: logging/user/backup-cloud-scheduler-errors [SUM]
+    displayName: backup-cloud-scheduler-alert
+    notificationChannels:
+      - $(ref.backup-notification-channel.name)
+    enabled: true
+- name: backup-cloud-spanner-alert
+  type: gcp-types/monitoring-v3:projects.alertPolicies
+  properties:
+    combiner: OR
+    conditions:
+    - conditionThreshold:
+        aggregations:
+        - alignmentPeriod: 60s
+          crossSeriesReducer: REDUCE_SUM
+          perSeriesAligner: ALIGN_MEAN
+        comparison: COMPARISON_GT
+        duration: 60s
+        filter: resource.type="spanner_instance"
+          AND metric.type="logging.googleapis.com/user/backup-cloud-spanner-errors"
+        thresholdValue: 0
+        trigger:
+          count: 1
+      displayName: logging/user/backup-cloud-spanner-errors [SUM]
+    displayName: backup-cloud-spanner-alert
+    notificationChannels:
+      - $(ref.backup-notification-channel.name)
+    enabled: true
