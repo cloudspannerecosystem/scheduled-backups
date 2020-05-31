@@ -109,3 +109,18 @@ resources:
     notificationChannels:
       - $(ref.backup-notification-channel.name)
     enabled: true
+- type: gcp-types/cloudfunctions-v1beta2:projects.locations.functions
+  name: spanner-create-backup-function
+  properties:
+    location: us-central1
+    function: SpannerCreateBackup
+    sourceArchiveUrl: gs://[gcs_bucket_name]/scheduled-backups.zip
+    entryPoint: SpannerCreateBackup
+    runtime: go113
+    eventTrigger:
+      resource: $(ref.cloud-spanner-scheduled-backups-topic.name)
+      eventType: providers/cloud.pubsub/eventTypes/topic.publish
+- type: gcp-types/pubsub-v1:projects.topics
+  name: cloud-spanner-scheduled-backups-topic
+  properties:
+    topic: cloud-spanner-scheduled-backups
