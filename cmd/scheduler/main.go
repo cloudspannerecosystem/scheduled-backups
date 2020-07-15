@@ -68,6 +68,9 @@ func main() {
 		os.Exit(2)
 	}
 	content, err := ioutil.ReadFile(filename)
+	if err != nil {
+		log.Fatalf("Failed to read file: %v", err)
+	}
 
 	var project Project
 
