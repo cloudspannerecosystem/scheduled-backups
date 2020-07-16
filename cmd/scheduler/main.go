@@ -32,10 +32,6 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-const defaultLocation = "us-central1"
-const pubsubTopic = "cloud-spanner-scheduled-backups"
-const jobPrefix = "spanner-backup"
-
 // Project contains the information of a GCP project.
 type Project struct {
 	Name      string     `yaml:"name"`
@@ -58,15 +54,19 @@ type Database struct {
 }
 
 func main() {
-	var filename string
+	var location, pubsubTopic, jobPrefix, filename string
 
 	flag.StringVar(&filename, "config", "", "The file path of the config file in yaml format.")
+	flag.StringVar(&location, "location", "us-central1", "Zone regions on GCP.")
+	flag.StringVar(&pubsubTopic, "pubsub-topic", "cloud-spanner-scheduled-backups", "Pub/sub topic name on GCP.")
+	flag.StringVar(&jobPrefix, "job-prefix", "spanner-backup", "Job prefix for cloud scheduler.")
 	flag.Parse()
 
 	if filename == "" {
 		flag.Usage()
 		os.Exit(2)
 	}
+
 	content, err := ioutil.ReadFile(filename)
 
 	var project Project
@@ -91,7 +91,7 @@ func main() {
 			// Get the specified location. If not given, use the default one.
 			loc := db.Location
 			if loc == "" {
-				loc = defaultLocation
+				loc = location
 			}
 			locPath := fmt.Sprintf("projects/%s/locations/%s", project.Name, loc)
 			jobID := fmt.Sprintf("%s-%s", jobPrefix, db.Name)
