@@ -32,10 +32,6 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-const defaultLocation = "us-central1"
-const pubsubTopic = "cloud-spanner-scheduled-backups"
-const jobPrefix = "spanner-backup"
-
 // Project contains the information of a GCP project.
 type Project struct {
 	Name      string     `yaml:"name"`
@@ -58,9 +54,12 @@ type Database struct {
 }
 
 func main() {
-	var filename string
+	var filename, defaultLocation, pubsubTopic, jobPrefix string
 
 	flag.StringVar(&filename, "config", "", "The file path of the config file in yaml format.")
+	flag.StringVar(&defaultLocation, "location", "us-central1", "The location where the scheduler is deployed.")
+	flag.StringVar(&pubsubTopic, "topic", "cloud-spanner-scheduled-backups", "The PubSub topic where the scheduler sends to.")
+	flag.StringVar(&jobPrefix, "prefix", "spanner-backup", "The name prefix of a scheduler job.")
 	flag.Parse()
 
 	if filename == "" {
