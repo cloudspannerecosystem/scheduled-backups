@@ -58,8 +58,8 @@ func main() {
 
 	flag.StringVar(&filename, "config", "", "The file path of the config file in yaml format.")
 	flag.StringVar(&defaultLocation, "location", "us-central1", "The location where the scheduler is deployed.")
-	flag.StringVar(&pubsubTopic, "topic", "cloud-spanner-scheduled-backups", "The PubSub topic where the scheduler sends to.")
-	flag.StringVar(&jobPrefix, "prefix", "spanner-backup", "The name prefix of a scheduler job.")
+	flag.StringVar(&pubsubTopic, "pubsubTopic", "cloud-spanner-scheduled-backups", "The PubSub topic where the scheduler sends to.")
+	flag.StringVar(&jobPrefix, "jobPrefix", "spanner-backup", "The name prefix of a scheduler job.")
 	flag.Parse()
 
 	if filename == "" {
