@@ -39,7 +39,7 @@ DATA=$(printf '{"database":"projects/[PROJECT_ID]/instances/[INSTANCE_ID]/databa
 
 ## Deploy scheduled jobs to Cloud Scheduler
 
-Note: To use Cloud Scheduler, we must [create an App Engine app](https://cloud.google.com/scheduler/docs#supported_regions).
+Note: To use Cloud Scheduler, we must [create an App Engine app](https://cloud.google.com/scheduler/docs#supported_regions). Cloud Scheduler must be deployed in the same region with App Engine. To specify a region, add a `location` flag to the `go run cmd/scheduler/main.go ...` command (default is set to `us-central1`).
 
 Make a copy of `schedule-template.yaml`, name it as `schedule.config.yaml` and
 replace `PROJECT_ID`, `INSTANCE_ID`, `DATABASE_ID` with your configurations.
