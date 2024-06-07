@@ -18,7 +18,9 @@ instances:
     databases:
       - name: DATABASE_ID
         schedule: 42 * * * * # Run hourly at a "random" minute 
-                             # to avoid overload. Please change
-                             # this to a different number!
+                             # to follow best practices with cron and
+                             # avoid scheduling all jobs at exactly
+                             # the same time.
+                             # Please change 42 to your favorite number!
         expire: 6h # the backup will expire after 6 hours
         time_zone: Australia/Sydney # optional. "utc" is the default value.
